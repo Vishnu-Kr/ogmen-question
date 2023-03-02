@@ -1,0 +1,10 @@
+<launch>
+  <!-- Start the reading_laser.py node -->
+
+<node pkg="bot_control" type="reading_laser.py" name="reading_laser" output="screen"/> 
+
+  <!-- Launch RViz with a laser scan visualization -->
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find bot_control)/rviz/laser_visualization.rviz">
+  </node>
+
+</launch>

@@ -1,13 +1,16 @@
-
+<?xml version="1.0"?>
 <launch>
 
-  <param name="bot_description" command="$(find bot_description)/urdf/bot.urdf"/>  
+    <arg name="model" default="$(find bot_description)/urdf/marsbot.xacro"/>
+    <arg name="gui" default="true" />
+    <arg name="rvizconfig" default="$(find bot_description)/launch/urdf.rviz" />
 
-  <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher"/>
+    <param name="robot_description" command="$(find xacro)/xacro --inorder $(arg model)" />
+    <param name="use_gui" value="$(arg gui)"/>
 
-  <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher"/>
+    <node name="joint_state_publisher_gui" pkg="joint_state_publisher_gui" type="joint_state_publisher_gui" />
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" required="true" />
 
-  <node name="rviz" pkg="rviz" type="rviz" required="true"/>
 
 </launch>
-
