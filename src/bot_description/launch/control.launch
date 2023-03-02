@@ -1,0 +1,7 @@
+<launch>
+  <!-- Launch robot description -->
+  <include file="$(find bot_description)/launch/spawn.launch" />
+
+  <!-- Launch keyboard teleoperation -->
+  <node pkg="teleop_twist_keyboard" type="teleop_twist_keyboard.py" name="teleop_keyboard" />
+</launch>

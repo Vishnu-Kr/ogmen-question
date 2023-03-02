@@ -1,0 +1,146 @@
+<?xml version="1.0" ?>
+<robot name="my_robot">
+
+
+
+  <link name="base_link">
+    <visual>
+      <geometry>
+        <box size="0.2 0.2 0.1"/>
+      </geometry>
+    </visual>
+  </link>
+
+  <link name="disc_1">
+    <visual>
+      <geometry>
+        <cylinder radius="0.060" length="0.01"/>
+      </geometry>
+    </visual>
+  </link>
+
+  <link name="disc_2">
+    <visual>
+      <geometry>
+        <cylinder radius="0.060" length="0.01"/>
+      </geometry>
+    </visual>
+  </link>
+
+
+  <link name="hemisphere">
+    <visual>
+      <geometry>
+        <sphere radius="0.021"/>
+      </geometry>
+    </visual>
+  </link>
+
+  <joint name="base_to_disc_1" type="fixed">
+    <parent link="base_link"/>
+    <child link="disc_1"/>
+    <origin xyz="-0.035 0.11 -0.01" rpy="1.57 0 0"/>
+  </joint>
+
+  <joint name="base_to_disc_2" type="fixed">
+    <parent link="base_link"/>
+    <child link="disc_2"/>
+    <origin xyz="-0.035 -0.11 -0.01" rpy="1.57 0 0"/>
+  </joint>
+
+  <joint name="base_to_hemisphere" type="fixed">
+    <parent link="base_link"/>
+    <child link="hemisphere"/>
+    <origin xyz="0.039 0 -0.05"/>
+  </joint>
+  <link name="camera_link">
+        <visual>
+            <geometry>
+                <box size="0.010 0.03 0.03"/>
+            </geometry>
+            <material name="red"/>
+        </visual>
+    </link>
+    <link name="camera_link_optical"></link>
+
+   <joint name="camera_joint" type="fixed">
+        <parent link="base_link"/>
+        <child link="camera_link"/>
+        <origin xyz="0.0305 0.01 0.008" rpy="0 0 0"/>
+    </joint>
+
+    <joint name="camera_optical_joint" type="fixed">
+        <parent link="camera_link"/>
+        <child link="camera_link_optical"/>
+        <origin xyz="0 0 0" rpy="-1.57 0 -1.57"/>
+    </joint>
+
+
+  <transmission name="base_to_disc_1">
+    <type>transmission_interface/SimpleTransmission</type>
+    <actuator name="base_to_disc_1_motor">
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+    <joint name="base_to_disc_1">
+      <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+    </joint>
+  </transmission>
+
+    <transmission name="base_to_disc_2">
+    <type>transmission_interface/SimpleTransmission</type>
+    <actuator name="base_to_disc_2_motor">
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+    <joint name="base_to_disc_2">
+      <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+    </joint>
+  </transmission>
+
+    <transmission name="base_to_hemisphere">
+    <type>transmission_interface/SimpleTransmission</type>
+    <actuator name="base_to_hemisphere_motor">
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+    <joint name="base_to_hemisphere">
+      <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+    </joint>
+  </transmission>
+
+
+ <gazebo>
+    <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+      <robotNamespace>/</robotNamespace>
+    </plugin>
+  </gazebo>
+  <gazebo>
+    <plugin name="joint_state_publisher" filename="libgazebo_ros_joint_state_publisher.so">
+        <jointName>base_to_disc_1, base_to_disc_2,base_to_hemisphere</jointName>
+    </plugin>
+    </gazebo>
+
+
+   <gazebo reference="camera_link">
+        <material>Gazebo/Red</material>
+
+        <sensor name="camera" type="camera">
+            <pose> 0 0 0 0 0 0 </pose>
+            <visualize>true</visualize>
+            <update_rate>10</update_rate>
+            <camera>
+                <horizontal_fov>1.089</horizontal_fov>
+                <image>
+                    <format>R8G8B8</format>
+                    <width>640</width>
+                    <height>480</height>
+                </image>
+                <clip>
+                    <near>0.05</near>
+                    <far>8.0</far>
+                </clip>
+            </camera>
+            <plugin name="camera_controller" filename="libgazebo_ros_camera.so">
+                <frame_name>camera_link_optical</frame_name>
+            </plugin>
+        </sensor>
+    </gazebo>
+</robot>
